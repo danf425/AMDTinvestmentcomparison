@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
         - name: <+pipeline.stages.DeployDEV.variables.app_label>
-          image: <+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].imageName>:<+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].tag>@<+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].digest>
+          image: <+artifact.image>
           env:
             - name: INFO_KUBE_ENV
               value: <+pipeline.stages.DeployDEV.variables.env>
