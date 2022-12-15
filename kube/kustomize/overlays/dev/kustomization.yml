@@ -1,5 +1,7 @@
 bases:
   - ../../base/
+kind: Kustomization
+
 
 #images:
 #  - name: app-image
