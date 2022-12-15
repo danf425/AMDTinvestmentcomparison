@@ -100,14 +100,14 @@ spec:
                 name: <+pipeline.stages.DeployDEV.variables.app_label>-runtime
           readinessProbe:
             httpGet:
-              path: ${context-path}/actuator/keepalive
+              path: <+pipeline.stages.DeployDEV.variables.context_path>/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: ${context-path}/actuator/keepalive
+              path: <+pipeline.stages.DeployDEV.variables.context_path>/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
