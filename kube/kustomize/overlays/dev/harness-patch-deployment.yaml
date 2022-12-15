@@ -18,4 +18,4 @@ spec:
             - name: INFO_KUBE_CLUSTER
               value: <+pipeline.stages.DeployDEV.variables.cluster>
             - name: INFO_KUBE_IMAGE
-              value: <+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].imageName>:<+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].tag>@<+pipeline.stages.Build.spec.execution.steps.Build_and_Push_Image["artifact-Build_and_Push_Image"].stepArtifacts.publishedImageArtifacts[0].digest>
+              value: <+artifact.image>
