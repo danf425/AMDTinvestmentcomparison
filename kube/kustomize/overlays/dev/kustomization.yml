@@ -2,6 +2,8 @@ bases:
   - ../../base/
 kind: Kustomization
 
+metadata:
+  name: kustomization
 
 #images:
 #  - name: app-image
