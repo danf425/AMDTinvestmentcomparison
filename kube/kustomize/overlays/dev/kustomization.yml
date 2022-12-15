@@ -5,9 +5,9 @@ kind: Kustomization
 metadata:
   name: kustomization
 
-#images:
-#  - name: app-image
-#    newName: ${containerImageUri}
+images:
+  - name: app-image
+    newName: <+artifact.image>
 
 namespace: <+infra.namespace>
 
