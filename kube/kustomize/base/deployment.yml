@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: <+pipeline.stages.DeployDEV.variables.app_label>
+  name: ${app-label}
 spec:
   selector:
     matchLabels:
-      app: <+pipeline.stages.DeployDEV.variables.app_label>
+      app: ${app-label}
   replicas: 1
   template:
     metadata:
       labels:
-        app: <+pipeline.stages.DeployDEV.variables.app_label>
+        app: ${app-label}
     spec:
       securityContext:
         runAsUser: 999
@@ -18,7 +18,7 @@ spec:
         - name: image-pull-secret
       serviceAccountName: morganfundsa
       containers:
-        - name: <+pipeline.stages.DeployDEV.variables.app_label>
+        - name: ${app-label}
           image: app-image
           resources:
             requests:
@@ -32,7 +32,7 @@ spec:
           env:
             # JVM Memory Settings for 1Gi total container memory. Bump the -Xmx setting to match any increase to container memory.
             - name: JAVA_OPTS
-              value: -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=512M -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx2048M  -Xms1024M  -Ddd.service.name=<+pipeline.stages.DeployDEV.variables.app_label> -Ddd.trace.global.tags=env:<+pipeline.stages.DeployDEV.variables.env> -Ddd.jmxfetch.enabled=TRUE -Dserver.tomcat.max.threads=800
+              value: -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=512M -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx2048M  -Xms1024M  -Ddd.service.name=${app-label} -Ddd.trace.global.tags=env:${environment} -Ddd.jmxfetch.enabled=TRUE -Dserver.tomcat.max.threads=800
             # Use X-Forwarded-* headers from Ingress to detect end-client information correctly
             - name: SERVER_USE_FORWARD_HEADERS
               value: "true"
@@ -40,11 +40,11 @@ spec:
               value: .*
             # Kubernetes related info for Actuator
             - name: INFO_KUBE_ENV
-              value: <+pipeline.stages.DeployDEV.variables.env>
+              value: ${environment}
             - name: INFO_KUBE_CLUSTER
-              value: <+pipeline.stages.DeployDEV.variables.cluster>
+              value: ${cluster}
             - name: INFO_KUBE_IMAGE
-              value: <+artifact.image>
+              value: ${containerImageUri}
             - name: INFO_KUBE_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -62,9 +62,9 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: DD_ENV
-              value: <+pipeline.stages.DeployDEV.variables.env>
+              value: ${environment}
             - name: DD_VERSION
-              value: <+artifact.image>
+              value: ${containerImageUri}
             - name: DD_APM_ENABLED
               value: "true"
             - name: DD_APM_NON_LOCAL_TRAFFIC
@@ -90,24 +90,24 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: DD_SERVICE_NAME
-              value: "<+pipeline.stages.DeployDEV.variables.app_label>"
+              value: "${app-label}"
             - name: DD_PROFILING_ENABLED
               value: "true"
             - name: AWS_STS_REGIONAL_ENDPOINTS
               value: regional
           envFrom:
             - configMapRef:
-                name: <+pipeline.stages.DeployDEV.variables.app_label>-runtime
+                name: ${app-label}-runtime
           readinessProbe:
             httpGet:
-              path: <+pipeline.stages.DeployDEV.variables.context_path>/actuator/keepalive
+              path: ${context-path}/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: <+pipeline.stages.DeployDEV.variables.context_path>/actuator/keepalive
+              path: ${context-path}/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
