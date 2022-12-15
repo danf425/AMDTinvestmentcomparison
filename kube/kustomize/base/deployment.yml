@@ -40,11 +40,11 @@ spec:
               value: .*
             # Kubernetes related info for Actuator
             - name: INFO_KUBE_ENV
-              value: ${environment}
+              value: <+pipeline.stages.DeployDEV.variables.env>
             - name: INFO_KUBE_CLUSTER
-              value: ${cluster}
+              value: <+pipeline.stages.DeployDEV.variables.cluster>
             - name: INFO_KUBE_IMAGE
-              value: ${containerImageUri}
+              value: <+artifact.image>
             - name: INFO_KUBE_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -62,9 +62,9 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: DD_ENV
-              value: ${environment}
+              value: <+pipeline.stages.DeployDEV.variables.env>
             - name: DD_VERSION
-              value: ${containerImageUri}
+              value: <+artifact.image>
             - name: DD_APM_ENABLED
               value: "true"
             - name: DD_APM_NON_LOCAL_TRAFFIC
@@ -90,14 +90,14 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: DD_SERVICE_NAME
-              value: "${app-label}"
+              value: "<+pipeline.stages.DeployDEV.variables.app_label>"
             - name: DD_PROFILING_ENABLED
               value: "true"
             - name: AWS_STS_REGIONAL_ENDPOINTS
               value: regional
           envFrom:
             - configMapRef:
-                name: ${app-label}-runtime
+                name: <+pipeline.stages.DeployDEV.variables.app_label>-runtime
           readinessProbe:
             httpGet:
               path: ${context-path}/actuator/keepalive
