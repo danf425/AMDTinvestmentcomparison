@@ -9,7 +9,7 @@ metadata:
 #  - name: app-image
 #    newName: ${containerImageUri}
 
-#namespace: ${namespace}
+namespace: <+infra.namespace>
 
 configMapGenerator:
   - name: aws-ic-runtime
