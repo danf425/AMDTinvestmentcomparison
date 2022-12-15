@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${app-label}
+  name: app-label
 spec:
   selector:
     matchLabels:
-      app: ${app-label}
+      app: app-label
   replicas: 1
   template:
     metadata:
       labels:
-        app: ${app-label}
+        app: app-label
     spec:
       securityContext:
         runAsUser: 999
@@ -18,7 +18,7 @@ spec:
         - name: image-pull-secret
       serviceAccountName: morganfundsa
       containers:
-        - name: ${app-label}
+        - name: app-label
           image: app-image
           resources:
             requests:
@@ -32,7 +32,7 @@ spec:
           env:
             # JVM Memory Settings for 1Gi total container memory. Bump the -Xmx setting to match any increase to container memory.
             - name: JAVA_OPTS
-              value: -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=512M -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx2048M  -Xms1024M  -Ddd.service.name=${app-label} -Ddd.trace.global.tags=env:${environment} -Ddd.jmxfetch.enabled=TRUE -Dserver.tomcat.max.threads=800
+              value: -XX:MaxDirectMemorySize=10M -XX:MaxMetaspaceSize=512M -XX:ReservedCodeCacheSize=240M -Xss1M -Xmx2048M  -Xms1024M  -Ddd.service.name=app-label -Ddd.trace.global.tags=env:env -Ddd.jmxfetch.enabled=TRUE -Dserver.tomcat.max.threads=800
             # Use X-Forwarded-* headers from Ingress to detect end-client information correctly
             - name: SERVER_USE_FORWARD_HEADERS
               value: "true"
@@ -40,11 +40,11 @@ spec:
               value: .*
             # Kubernetes related info for Actuator
             - name: INFO_KUBE_ENV
-              value: ${environment}
+              value: env
             - name: INFO_KUBE_CLUSTER
-              value: ${cluster}
+              value: cluster
             - name: INFO_KUBE_IMAGE
-              value: ${containerImageUri}
+              value: containerimage
             - name: INFO_KUBE_NAMESPACE
               valueFrom:
                 fieldRef:
@@ -62,9 +62,9 @@ spec:
                 fieldRef:
                   fieldPath: spec.nodeName
             - name: DD_ENV
-              value: ${environment}
+              value: env
             - name: DD_VERSION
-              value: ${containerImageUri}
+              value: imageuri
             - name: DD_APM_ENABLED
               value: "true"
             - name: DD_APM_NON_LOCAL_TRAFFIC
@@ -90,24 +90,24 @@ spec:
                 fieldRef:
                   fieldPath: status.hostIP
             - name: DD_SERVICE_NAME
-              value: "${app-label}"
+              value: app-label
             - name: DD_PROFILING_ENABLED
               value: "true"
             - name: AWS_STS_REGIONAL_ENDPOINTS
               value: regional
           envFrom:
             - configMapRef:
-                name: ${app-label}-runtime
+                name: app-label-runtime
           readinessProbe:
             httpGet:
-              path: ${context-path}/actuator/keepalive
+              path: context-path/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
             periodSeconds: 10
           livenessProbe:
             httpGet:
-              path: ${context-path}/actuator/keepalive
+              path: context-path/actuator/keepalive
               port: 8080
             timeoutSeconds: 5
             initialDelaySeconds: 70
