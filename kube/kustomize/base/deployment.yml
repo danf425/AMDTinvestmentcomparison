@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ${app-label}
+  name: <+pipeline.stages.DeployDEV.variables.app_label>
 spec:
   selector:
     matchLabels:
-      app: ${app-label}
+      app: <+pipeline.stages.DeployDEV.variables.app_label>
   replicas: 1
   template:
     metadata:
       labels:
-        app: ${app-label}
+        app: <+pipeline.stages.DeployDEV.variables.app_label>
     spec:
       securityContext:
         runAsUser: 999
@@ -18,7 +18,7 @@ spec:
         - name: image-pull-secret
       serviceAccountName: morganfundsa
       containers:
-        - name: ${app-label}
+        - name: <+pipeline.stages.DeployDEV.variables.app_label>
           image: app-image
           resources:
             requests:
