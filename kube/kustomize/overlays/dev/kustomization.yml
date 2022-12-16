@@ -1,21 +1,24 @@
+
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+metadata:
+  name: arbitrary
+
 bases:
   - ../../base/
-#kind: Kustomization
-#metadata:
-#  name: kustomization
-
+ 
 images:
   - name: app-image
     newName: <+artifact.image>
 
 namespace: <+infra.namespace>
 
-#resources: 
-#- harness-patch-deployment.yaml
-#- harness-patch-hpa.yaml
-#- harness-patch-ingress.yaml
-#- harness-patch-service.yaml
-#- kustomization.yml
+resources: 
+- harness-patch-deployment.yaml
+- harness-patch-hpa.yaml
+- harness-patch-ingress.yaml
+- harness-patch-service.yaml
+- kustomization.yml
 
 configMapGenerator:
   - name: aws-ic-runtime
